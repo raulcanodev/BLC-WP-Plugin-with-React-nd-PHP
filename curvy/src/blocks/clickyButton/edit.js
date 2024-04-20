@@ -16,7 +16,20 @@ export default function Edit(props) {
 		);
 	});
 	console.log({ postTypes });
-
+	const posts = useSelect(
+		(select) => {
+			const data = select("core").getEntityRecords(
+				"postType",
+				props.attributes.postTypes,
+				{
+					per_page: -1,
+				},
+			);
+			return data;
+		},
+		[props.attributes.postTypes],
+	);
+	console.log({ posts });
 	const blockProps = useBlockProps();
 
 	return (
@@ -40,6 +53,27 @@ export default function Edit(props) {
 							})),
 						]}
 					/>
+					{props.attributes.postTypes && (
+						<SelectControl
+							label={`Linked ${props.attributes.postTypes}`}
+							value={props.attributes.linkedPost}
+							onChange={(newValue) => {
+								props.setAttributes({
+									linkedPost: newValue ? parseInt(newValue) : null,
+								});
+							}}
+							options={[
+								{
+									label: `Select a ${props.attributes.postTypes} to link to`,
+									value: "",
+								},
+								...(posts || []).map((post) => ({
+									label: post.title.rendered,
+									value: post.id,
+								})),
+							]}
+						/>
+					)}
 				</PanelBody>
 			</InspectorControls>
 			<div {...blockProps}>
