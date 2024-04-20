@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:       Blockylicious
  * Description:       A plugin of funky blocks.
@@ -26,25 +27,32 @@
 
 namespace WebDevEducation;
 
-if(!defined('ABSPATH')){
+if (!defined('ABSPATH')) {
 	die('Silence is golden.');
 }
 
-final class Blockylicious{
-	static function init(){
-		add_action( 'init', function(){
-			add_filter('block_categories_all', function($categories){
+final class Blockylicious
+{
+	static function init()
+	{
+		add_action('enqueue_block_assets', function () {
+			wp_enqueue_style('dashicons');
+		});
+		add_action('init', function () {
+			add_filter('block_categories_all', function ($categories) {
 				// Agregar la categoría personalizada al principio del array
 				array_unshift($categories, [
-					'slug'=> 'blockylicious',
-					'title'=> 'Blockylicious'
+					'slug' => 'blockylicious',
+					'title' => 'Blockylicious'
 				]);
 				return $categories;
 			});
-			register_block_type( __DIR__ . '/build/blocks/curvy' );
-			register_block_type( __DIR__ . '/build/blocks/clickyGroup' );
-			register_block_type( __DIR__ . '/build/blocks/clickyButton' );
-		} );
+			register_block_type(__DIR__ . '/build/blocks/curvy');
+			register_block_type(__DIR__ . '/build/blocks/clickyGroup');
+			register_block_type(__DIR__ . '/build/blocks/clickyButton');
+			register_block_type(__DIR__ . '/build/blocks/piccyGallery');
+			register_block_type(__DIR__ . '/build/blocks/piccyImage');
+		});
 	}
 
 	static function convert_custom_properties($value)
@@ -68,7 +76,3 @@ final class Blockylicious{
 
 // Inicializar la clase después de la declaración del espacio de nombres
 Blockylicious::init();
-
-
-
-
